@@ -1,7 +1,7 @@
-import {market} from "./src/market";
+import {market} from "./market";
 import {otherIdCollectionHandler} from "./otherIdCollectionHandler";
 import {simpleCollectionHandler} from "./simpleCollectionHandler";
-import {IOrder} from "./src/types/interfaces";
+import {IOrder} from "./types/interfaces";
 
 export async function orderHandler(collectionAddress: string, sellerAddress: string, tokenId: string, askPrice: number | string) {
     const collection = market.getCollectionByAddress(collectionAddress);

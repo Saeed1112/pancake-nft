@@ -1,4 +1,4 @@
-import {ICollection, IOrder} from "./src/types/interfaces";
+import {ICollection, IOrder} from "./types/interfaces";
 import {formatEther} from "ethers";
 
 export async function simpleCollectionHandler(collection: ICollection,
