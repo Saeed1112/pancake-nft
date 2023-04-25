@@ -10,11 +10,11 @@ export interface ICollection {
     minProfit: number,
     maxPrice: number,
     profitPercentage: number,
-    otherIds?: OtherId[]
+    otherIds?: IOtherId[]
     id?: string
 }
 
-export interface OtherId {
+export interface IOtherId {
     minProfit: number,
     profitPercentage: number,
     lastPrice: number,
@@ -27,7 +27,7 @@ export interface OtherId {
 }
 
 
-export interface Nft {
+export interface INft {
     tokenId: string;
     currentAskPrice: string;
     currentSeller: string;
@@ -38,4 +38,8 @@ export interface Nft {
     collection: ICollection;
 }
 
-
+export interface IOrder {
+    askPrice: number | string;
+    tokenId: string | number;
+    collection: ICollection;
+}

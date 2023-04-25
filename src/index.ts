@@ -1,17 +1,13 @@
 import {market} from "./market";
-
+import {PancakeNftMarketContract} from "./contracts/pancakeNftMarket.contract";
+import {orderHandler} from "../orderHandler";
 
 async function main() {
-
     await market.updatePrices()
-    console.log(market.collections[market.collections.length - 1])
-
-    // console.log(await market.getPriceOfOtherId(10))
-
-    // console.log(await market.updateCollectionsWithOtherId())
-
-
+    await PancakeNftMarketContract.on('AskUpdate', orderHandler)
+    await PancakeNftMarketContract.on('AskNew', orderHandler)
 }
 
-
 main();
+
+
