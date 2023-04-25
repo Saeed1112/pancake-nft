@@ -1,6 +1,7 @@
 import {market} from "./src/market";
 import {otherIdCollectionHandler} from "./otherIdCollectionHandler";
 import {simpleCollectionHandler} from "./simpleCollectionHandler";
+import {IOrder} from "./src/types/interfaces";
 
 export async function orderHandler(collectionAddress: string, sellerAddress: string, tokenId: string, askPrice: number) {
     const collection = market.getCollectionByAddress(collectionAddress);
@@ -10,11 +11,10 @@ export async function orderHandler(collectionAddress: string, sellerAddress: str
         otherId = await market.getTokenOtherIdByCollectionAndTokenId(collectionAddress, tokenId);
 
 
-    let order = null;
+    let order: IOrder | undefined;
 
     if (otherId)
-        await otherIdCollectionHandler(collection, sellerAddress, tokenId, askPrice, otherId);
+        order = await otherIdCollectionHandler(collection, sellerAddress, tokenId, askPrice, otherId);
     else
-        await simpleCollectionHandler(collection, sellerAddress, tokenId, askPrice);
-
+        order = await simpleCollectionHandler(collection, sellerAddress, tokenId, askPrice);
 }

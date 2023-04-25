@@ -1,7 +1,7 @@
-import {ICollection} from "./src/types/interfaces";
+import {ICollection, IOrder} from "./src/types/interfaces";
 import {formatEther} from "ethers";
 
-export async function simpleCollectionHandler(collection: ICollection, sellerAddress: string, tokenId: string, askPrice: number) {
+export async function simpleCollectionHandler(collection: ICollection, sellerAddress: string, tokenId: string, askPrice: number): Promise<IOrder |  undefined> {
     console.log({
         collection,
         sellerAddress,

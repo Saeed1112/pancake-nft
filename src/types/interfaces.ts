@@ -31,7 +31,6 @@ export interface INft {
     tokenId: string;
     currentAskPrice: string;
     currentSeller: string;
-    latestTradedPriceInBNB: string;
     isTradable: boolean;
     updatedAt: string;
     otherId: null;

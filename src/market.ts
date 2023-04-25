@@ -107,7 +107,7 @@ class Market {
         collectionAddress = collectionAddress.toLowerCase();
         const collections = this.collections.find(({address}) => address.toLowerCase() === collectionAddress);
         if (!collections || !collections.otherIds) return;
-        return collections.otherIds.find(({id}) => id === otherId);
+        return collections.otherIds.find(({id}) => String(id) === String(otherId));
     }
 
     async getTokenOtherIdByCollectionAndTokenId(collectionAddress: string, tokenId: string | number): Promise<string | number> {
@@ -115,7 +115,7 @@ class Market {
         if (!collection) return;
         const otherId = collection[tokenId];
         if (otherId) return otherId;
-        return (await PancakeBunnyCollection.getBunnyId(tokenId)).toString();
+        return (await PancakeBunnyCollection['getBunnyId'](tokenId)).toString();
     }
 
 }
