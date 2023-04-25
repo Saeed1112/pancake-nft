@@ -3,7 +3,7 @@ import {otherIdCollectionHandler} from "./otherIdCollectionHandler";
 import {simpleCollectionHandler} from "./simpleCollectionHandler";
 import {IOrder} from "./src/types/interfaces";
 
-export async function orderHandler(collectionAddress: string, sellerAddress: string, tokenId: string, askPrice: number) {
+export async function orderHandler(collectionAddress: string, sellerAddress: string, tokenId: string, askPrice: number | string) {
     const collection = market.getCollectionByAddress(collectionAddress);
     let otherId;
     if (!collection) return;
