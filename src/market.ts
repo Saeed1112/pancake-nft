@@ -1,7 +1,7 @@
 // @ts-nocheck
 import axios from 'axios'
 import {ICollection, INft} from "./types/interfaces";
-import {activeCollections} from "./consts";
+import {activeCollections, PANCAKESWAP_GRAPHQL_ENDPOINT} from "./consts";
 import fs from "fs";
 import {PancakeBunnyCollection} from "./contracts/panckeBunnyCollection.contract";
 
@@ -9,6 +9,7 @@ class Market {
 
     collections: ICollection[] = [];
     otherIds: any = {};
+    updated: boolean = false;
 
     constructor() {
         this.collections = activeCollections.filter(({isActive}) => isActive)
@@ -21,10 +22,20 @@ class Market {
     }
 
     async updatePrices() {
-        return await Promise.all([
-            this.updateCollections(),
-            this.updateCollectionsWithOtherId()
-        ])
+        try {
+            const result = await Promise.all([
+                this.updateCollections(),
+                this.updateCollectionsWithOtherId()
+            ])
+            console.log('Market Updated');
+            this.updated = true;
+            return result;
+        } catch (e) {
+            market.updated = false;
+            console.log('Update market Error', e.message)
+            return await this.updatePrices();
+        }
+
     }
 
     async updateCollections() {
@@ -37,7 +48,7 @@ class Market {
             const {currentAskPrice, currentSeller, collection} = order;
             const existCollection = this.collections.find(({address}) => address.toLowerCase() === collection?.id)
             if (!existCollection) return;
-            existCollection.lastPrice = +currentAskPrice;
+            existCollection.lastPrice = Number.parseFloat(currentAskPrice);
             existCollection.currentSeller = currentSeller.toLowerCase();
         })
     }
@@ -56,24 +67,18 @@ class Market {
                 if (!existCollection || !existCollection.otherIds) return;
                 const existOtherIdNft = existCollection.otherIds.find(({id}) => id === otherId)
                 if (!existOtherIdNft) return;
-                existOtherIdNft.lastPrice = +currentAskPrice;
-                existOtherIdNft.currentSeller = currentSeller;
+                existOtherIdNft.lastPrice = Number.parseFloat(currentAskPrice);
+                existOtherIdNft.currentSeller = currentSeller.toLowerCase();
             })
     }
 
     async getPriceOfCollection(collectionAddress: string): Promise<INft> {
         collectionAddress = collectionAddress.toLowerCase()
-        const result = await axios.post('https://api.thegraph.com/subgraphs/name/pancakeswap/nft-market', {
+        const result = await axios.post(PANCAKESWAP_GRAPHQL_ENDPOINT, {
             query: "query getNftsMarketData($first: Int, $skip: Int!, $where: NFT_filter, $orderBy: NFT_orderBy, $orderDirection: OrderDirection) {nfts(where: $where, first: $first, orderBy: $orderBy, orderDirection: $orderDirection, skip: $skip) {tokenId  currentAskPrice  currentSeller  latestTradedPriceInBNB  isTradable  updatedAt  otherId  collection {id} }}",
             variables: {
-                where: {
-                    collection: collectionAddress,
-                    isTradable: true
-                },
-                first: 1,
-                skip: 0,
-                orderBy: "currentAskPrice",
-                orderDirection: "asc"
+                where: {collection: collectionAddress, isTradable: true},
+                first: 1, skip: 0, orderBy: "currentAskPrice", orderDirection: "asc"
             },
             operationName: "getNftsMarketData"
         })
@@ -81,17 +86,11 @@ class Market {
     }
 
     async getPriceOfOtherId(collectionAddress: string, otherId: string | number): Promise<INft> {
-        const result = await axios.post('https://api.thegraph.com/subgraphs/name/pancakeswap/nft-market', {
+        const result = await axios.post(PANCAKESWAP_GRAPHQL_ENDPOINT, {
             query: "query getNftsMarketData($first: Int, $skip: Int!, $where: NFT_filter, $orderBy: NFT_orderBy, $orderDirection: OrderDirection) {nfts(where: $where, first: $first, orderBy: $orderBy, orderDirection: $orderDirection, skip: $skip) {tokenId  currentAskPrice  currentSeller  latestTradedPriceInBNB  isTradable  updatedAt  otherId  collection {id} }}",
             variables: {
-                where: {
-                    otherId,
-                    isTradable: true
-                },
-                first: 1,
-                skip: 0,
-                orderBy: "currentAskPrice",
-                orderDirection: "asc"
+                where: {otherId, isTradable: true},
+                first: 1, skip: 0, orderBy: "currentAskPrice", orderDirection: "asc"
             },
             operationName: "getNftsMarketData"
         })
@@ -119,6 +118,7 @@ class Market {
     }
 
 }
+
 
 export const market = new Market()
 

@@ -641,7 +641,7 @@ export const activeCollections: ICollection[] = [
             },
             {
                 name: 'Pancake Christmas 2021',
-                maxPrice: 0,
+                maxPrice: 0.01,
                 lastPrice: 9999,
                 minProfit: 10,
                 profitPercentage: 10,
@@ -674,4 +674,6 @@ export const activeCollections: ICollection[] = [
     }
 ]
 
+
+export const PANCAKESWAP_GRAPHQL_ENDPOINT = 'https://api.thegraph.com/subgraphs/name/pancakeswap/nft-market'
 

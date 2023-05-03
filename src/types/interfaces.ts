@@ -10,11 +10,11 @@ export interface ICollection {
     minProfit: number,
     maxPrice: number,
     profitPercentage: number,
-    otherIds?: IOtherId[]
+    otherIds?: IOtherItem[]
     id?: string
 }
 
-export interface IOtherId {
+export interface IOtherItem {
     minProfit: number,
     profitPercentage: number,
     lastPrice: number,
@@ -41,4 +41,5 @@ export interface IOrder {
     askPrice: number | string;
     tokenId: string | number;
     collection: ICollection;
+    otherItem?: IOtherItem
 }
