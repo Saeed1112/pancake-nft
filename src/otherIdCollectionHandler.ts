@@ -13,8 +13,7 @@ export async function otherIdCollectionHandler(collection: ICollection, sellerAd
 
     const profitPercentage = 100 - (askPrice / otherItem?.lastPrice * 100);
     steps[0] = askPrice <= +otherItem?.maxPrice;
-    steps[1] = askPrice < otherItem?.lastPrice;
-    steps[2] = profitPercentage >= otherItem?.profitPercentage;
+    steps[1] = profitPercentage >= otherItem?.profitPercentage;
     const isAcceptable = steps.reduce((a, b) => a && b)
     console.log({isAcceptable, profitPercentage, askPrice, otherItem, steps})
 

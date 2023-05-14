@@ -13,16 +13,11 @@ export async function orderHandler(collectionAddress: string, sellerAddress: str
     if (!collection) return;
     if (collection.otherIds)
         otherId = await market.getTokenOtherIdByCollectionAndTokenId(collectionAddress, tokenId);
-
-
     let order: IOrder | undefined;
-
     if (otherId)
         order = await otherIdCollectionHandler(collection, sellerAddress, tokenId, askPrice, otherId);
     else
         order = await simpleCollectionHandler(collection, sellerAddress, tokenId, askPrice);
-
-
     if (order)
         console.log({order})
 

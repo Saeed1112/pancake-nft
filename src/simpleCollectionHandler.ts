@@ -14,8 +14,7 @@ export async function simpleCollectionHandler(collection: ICollection,
     const profitPercentage = 100 - (askPrice / collection?.lastPrice * 100);
 
     steps[0] = askPrice <= +collection?.maxPrice;
-    steps[1] = askPrice < collection?.lastPrice;
-    steps[2] = profitPercentage >= collection?.profitPercentage;
+    steps[1] = profitPercentage >= collection?.profitPercentage;
     const isAcceptable = steps.reduce((a, b) => a && b)
     console.log({isAcceptable, profitPercentage, askPrice, collection, steps})
 
